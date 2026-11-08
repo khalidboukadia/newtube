@@ -209,7 +209,7 @@ public final class MobileMiniPlayerController {
         mBar.setAlpha(1f);
         mBar.setScaleX(1f);
         mBar.setScaleY(1f);
-        mBar.setTranslationX(0f); // a card swiped away (MiniCardSwipe)
+        MiniCardDock.rest(mBar); // a card swiped away or docked elsewhere (MiniCardSwipe)
 
         mEntryAnimating = animateFromPlayer;
         mTextureHasFrame = false;
@@ -412,15 +412,19 @@ public final class MobileMiniPlayerController {
         mBar.setPivotY(0f);
         mBar.setScaleX(sourceWidth / width);
         mBar.setScaleY(sourceHeight / height);
-        mBar.setTranslationX(contentLocation[0] - cardLocation[0]);
-        mBar.setTranslationY(contentLocation[1] - cardLocation[1]);
+        // The card may rest in any corner (MiniCardDock): its on-screen spot already includes that
+        // offset, so the start is the resting translation plus the way back to the video box.
+        float restX = MiniCardDock.restX(mBar, MiniCardDock.corner());
+        float restY = MiniCardDock.restY(mBar, MiniCardDock.corner());
+        mBar.setTranslationX(restX + contentLocation[0] - cardLocation[0]);
+        mBar.setTranslationY(restY + contentLocation[1] - cardLocation[1]);
 
         setControlsAlpha(0f);
         mBar.animate()
                 .scaleX(1f)
                 .scaleY(1f)
-                .translationX(0f)
-                .translationY(0f)
+                .translationX(restX)
+                .translationY(restY)
                 .setDuration(ENTRY_DURATION_MS)
                 .setInterpolator(new DecelerateInterpolator())
                 .withEndAction(() -> {
@@ -446,8 +450,7 @@ public final class MobileMiniPlayerController {
         mBar.setPivotY(mBar.getHeight() / 2f);
         mBar.setScaleX(1f);
         mBar.setScaleY(1f);
-        mBar.setTranslationX(0f);
-        mBar.setTranslationY(0f);
+        MiniCardDock.rest(mBar);
         setControlsAlpha(1f);
     }
 

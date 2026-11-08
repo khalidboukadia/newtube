@@ -253,7 +253,8 @@ public final class MobileSnackbar {
         // pause button was covered for the whole message), else Browse's bottom nav.
         View mini = activity.findViewById(R.id.mobile_mini_player);
         View nav = activity.findViewById(R.id.mobile_bottom_nav);
-        if (mini != null && mini.getVisibility() == View.VISIBLE) {
+        if (mini != null && mini.getVisibility() == View.VISIBLE
+                && !com.newtube.mobile.ui.playback.MiniCardDock.isTop()) {
             snackbar.setAnchorView(mini);
         } else if (nav != null && nav.getVisibility() == View.VISIBLE) {
             snackbar.setAnchorView(nav);

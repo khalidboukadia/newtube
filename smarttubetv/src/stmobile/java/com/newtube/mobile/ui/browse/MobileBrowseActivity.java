@@ -509,7 +509,7 @@ public class MobileBrowseActivity extends MobileActivity
         mMiniPlayerBar.setAlpha(1f);
         mMiniPlayerBar.setScaleX(1f);
         mMiniPlayerBar.setScaleY(1f);
-        mMiniPlayerBar.setTranslationX(0f);
+        com.newtube.mobile.ui.playback.MiniCardDock.rest(mMiniPlayerBar); // the corner it was last dropped in
         mMiniPlayerBar.setVisibility(View.VISIBLE);
         updateMiniPlayPauseIcon(player);
 
@@ -701,7 +701,7 @@ public class MobileBrowseActivity extends MobileActivity
         mMiniPlayerBar.setAlpha(1f);
         mMiniPlayerBar.setScaleX(1f);
         mMiniPlayerBar.setScaleY(1f);
-        mMiniPlayerBar.setTranslationX(0f);
+        com.newtube.mobile.ui.playback.MiniCardDock.rest(mMiniPlayerBar);
         mMiniButtonsFadePending = false;
         setMiniButtonsAlpha(1f);
     }

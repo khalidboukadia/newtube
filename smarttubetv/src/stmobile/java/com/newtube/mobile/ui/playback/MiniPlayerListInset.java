@@ -39,7 +39,25 @@ public final class MiniPlayerListInset implements ViewTreeObserver.OnGlobalLayou
             return;
         }
         list.setClipToPadding(false);
-        card.getViewTreeObserver().addOnGlobalLayoutListener(new MiniPlayerListInset(card, list));
+        MiniPlayerListInset inset = new MiniPlayerListInset(card, list);
+        card.getViewTreeObserver().addOnGlobalLayoutListener(inset);
+        // NEWTUBE(motion): the card can be docked at the top (MiniCardDock); the list then needs no
+        // room at its bottom. Follows the corner for as long as the card is on screen.
+        Runnable onCorner = inset::onGlobalLayout;
+        card.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                MiniCardDock.addListener(onCorner);
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                MiniCardDock.removeListener(onCorner);
+            }
+        });
+        if (card.isAttachedToWindow()) {
+            MiniCardDock.addListener(onCorner);
+        }
     }
 
     @Override
@@ -53,7 +71,7 @@ public final class MiniPlayerListInset implements ViewTreeObserver.OnGlobalLayou
     }
 
     private int requiredExtra() {
-        if (mCard.getVisibility() != View.VISIBLE || mCard.getHeight() <= 0) {
+        if (mCard.getVisibility() != View.VISIBLE || mCard.getHeight() <= 0 || MiniCardDock.isTop()) {
             return 0;
         }
         int margin = 0;
